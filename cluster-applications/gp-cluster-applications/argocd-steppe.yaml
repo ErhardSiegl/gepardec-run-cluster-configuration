@@ -1,0 +1,302 @@
+---
+# Source: gp-cluster-setup/templates/02-argo-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-logging-instance
+  finalizers:
+  - "resources-finalizer.argocd.argoproj.io"
+spec:
+  destination:
+    namespace: openshift-logging
+    server: 'https://kubernetes.default.svc'
+  project: gepaplexx
+  source:
+    chart: gp-cluster-logging-instance
+    helm:
+      parameters:
+      - name: elasticsearch.resources.requests.memory
+        value: 10Gi
+      - name: elasticsearch.resources.limits.memory
+        value: 10Gi
+    repoURL: https://gepaplexx.github.io/gp-helm-charts/
+    targetRevision: 1.3.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+...
+---
+# Source: gp-cluster-setup/templates/02-argo-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-logging-eventrouter
+  finalizers:
+  - "resources-finalizer.argocd.argoproj.io"
+spec:
+  destination:
+    namespace: openshift-logging
+    server: 'https://kubernetes.default.svc'
+  project: gepaplexx
+  source:
+    chart: gp-cluster-logging-eventrouter
+    repoURL: https://gepaplexx.github.io/gp-helm-charts/
+    targetRevision: 0.1.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+...
+---
+# Source: gp-cluster-setup/templates/02-argo-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-monitoring
+  finalizers:
+  - "resources-finalizer.argocd.argoproj.io"
+spec:
+  destination:
+    namespace: openshift-monitoring
+    server: 'https://kubernetes.default.svc'
+  project: gepaplexx
+  source:
+    chart: gp-cluster-monitoring-config
+    helm:
+      parameters:
+      - name: alertmanager.config
+        value: AgAygDYZ5F7XEDNU4s7/35RbLp+d9JpfQpSMqGivpai8622bIUUlmCWKayKg4GTMlEHB4jy1V3z/g6lPuWS1JbIJMazLBnsqGd3nlGOQ8IYR0F5cgxirciZsk2ZSENaLpFT4FNagFgEacVQ+OOHuKQtxyZejDBWbxwkmneT30P+NvBjn6aphPE8565AADtVQKabx2nvE553FXH53AzFT9V/L9xqoZrRUhfP5jFOWK9opqiQwQTRzs07C9w/fkVJSqBs1rNitO84ZgJEu06h19Ug0BWyVBX7REZQh9zWqGzNBlMV7eWqLB7YbvLLE5v8BY3i6VrbawZC1+4YpBD6AwXGVgq9ry+ZN7O0XugEzvrgoUxF0ZZojSU34o6+MGY9LNtNqAgd6QuSS86rcHb0s1SKSfpwEhoVDsoms/cb6C2/HWSLhlqqkm7CLvQSHrvpvj9IcTS2a4zCqcPEzyfHnjBTyBhNcBjxC+i9Tek+r71VrPfIh5dxrpGuVriQ4WTCBOE0QBbwAAe3Jd2iTLXQ7rpLSeWUtWWbtiUBDUPPQvy+WP77q781jfs38bGY4v893xzJZjInSqgAJ2cYFJHDppMV2oFJZogeP+A7GoJk20azSadHVkX4Io0IqKBFuuo6ooi/jqVcLJHiJZ3zs53xnG1xHYc5oxvP18XEZcO8FA0gp35M64cRIQDT7X+OBMby7pCgAiKRFNI+SuD8ij0eznrS1Lds1ZgEdypW2UWXtC952SMOcKpJwS/KQokkHtGc9NBH210PyfJZ3snHLFXOmRDFfJWcxpTnVSWnc4Kq+XGmsiGAELBSBeLaQSLMFL8R/HmYbx7zdDQMdVthvrl30yXgGA2AcX+Zgfu7Y47sQ7SIdRuJVsu0OA4S0ij8rm/N4wimrHHIIUgFQIR/yCbLAzTjRTjReCuS0L6trCu68JcXgnwheRkZFdOSCt53aC2SeH8FR87NjUrkIHBMCLCjchOzZBaQ0RWdFoYwWpq7zLKTA11OsTZLeny6AdquV318QZYDjuOSSBbqnQFKbWOOTciRpCdTq6xXBAd3nfnuCDC/teqF3IOtjgTdWIJDDKfdBSCX5hY7YOf0zByxdjVYs2jUz893yLP4qvmr8EfQke8hdO7B1XXLEkZCBe/DmysSQ3mk7EJwxskEpL5KU/HhUipJpq0GAffK0ye3+1I1hmVJFahbt5ficBCg8A79xx0DihQaGRYdqZuGzFhb7uID1TsbA8EKODIA1+jmnRzif/emWvIIpfws4dBiBujdO4ZPpHhNkalARtk5Y2EyEwyWAiYnLR5H/D1k/FX0Q8yIvvqzLVyl9I5LjR5YNvr3mWKQHsA4wSUo+YkhlMmzpvZhJLDlfeYvexJ/FY1zCvmo9wPhXNBZMLg5d5aBUuMe4QSWet9WSBz+LR0pRwEG2BkpiqAp/AmOlAPDnehi7cIO3VabSWk3tOKCaOfBKGIbXdRJISvAPwfQSYBlufaJlnrw1E9NsBdLLzVVnxTC8HAsUZN4rO9jggoUsD/KEvHs8MrPtrb/hSOTmN0zD/VP9KcSV+iW8/cxAOgTiIWbIuDJSugEMW6UNSwm2o2qRkCxk5r7y1wdfRHrg+VNNONvUALUeR7OeqgNU/KGOLorr5KTV0NlyXuJOGZH2w0AxFBND9+trREoBdYb8cdmPlS7AbIsUsZe80Fm9fU0Aiant4iHIuIqbbd0ACUWLoTKlRoL8qfgUMzIzhasmeWcW9/pQyYmFAGC31COYxFGNUSqPj1axljip4XUoxb0UIHyJn+90yXmyAlFCTncx10hrdlSTGV/Qa4M/TCSMFsef3vLzCrFir9hC1JTaAOp8rMybohtbUkf2gFZbpfwNS07tls975IQuGzlrPDiS1X46qGsKyZwPkswHz4XbB/cFsfweC/hVpVMTzRReAVfyeDUd6OtF491lM6b/28451GD1mKWXK37mVtgjViX7kZiaa9i7FqexfS3ZPEr0Cr9T+LhKdIfxvm0qmpi0mjW0xFRwTg7iyH/82sU9sFsN54hBAd7GK+qmE5u5jIu/E7/m4PXvkoxPrEQhrsd0TzM8B6WV6wM9h3bpUgXIWZDwqwZWKIjYvJe+yltzI7QziW/RAyhVbSF+EYvnjbkv8kZWUI7kn557mJWnCPnzb3zd1Xx40fHZo7vZZk7dgCm7viChNAwoZtjw34mb6Fp9OGy7BcZImv4LR+r+xCuEdjiITYzyj3n3/DskJCe/G1D1THekFC+9nBYe8RY/mf1GHuZBD+sz/YRB7PId8dTbvcxOXfnLuQk2T6qh08XqLklrtlqUeVvXxjmxx8Me/nnqMGaUMdR7egznC8gTNP8uNSqVCQRwIoDwi3zfqxgnTXY563hXc/TcFe2p5mlJALmB8oFrkEmgV7RtzIySE59FPXCoPHai9UCNzvIV5eKYnkKgIPObnCXP7aBl5pCtT4E/oA23m5JrQL8MmMvdNH10CtyAqHVsiyDey8H9R7DkRj5+fEuiZrjq+B4FXWMU0CuJTdvtUHaKoezxfLliJKbp3g2nMFyrj1kEXRyYF0ataIiwKIJNtOwl6JAmu3BZfvA/1kxKcxax2F8Cai8KWabOLF5KJQfIQtEzt7ax/f9TyzjjEpwx8XwMxdowHye624MmwRRFmjoEO3kffOmhelRm+A4gIVLL8d53ey4NOu1a9FQv/nQDtm7xZu+hLksTW/lguKwFSSJCRbnF/JnsRZPvwqnOHo308FUYVgQ+dxA7iH8RS6yO5v95luOVpV5MemFHIk+xYJRoV8cjmimaFuPgG85y/JZ4pTshxmzgz4zkoP/4uQiN3pqwjHaUP6Cji1MNfHmYw8xI0NdlzKRIwCPgbivR7KeR76MzVEHDYvDEWJ1TYHjfKQxBlD8zga+gdPZgqg679IaohP2KUbJq3ON3CbqeFIg5gGnWXfg64lj4sD5WNqoI+a4h5HI5syxaEdglThlLGa9QsoN3CACnmXc4VzN/clniV/WkwZ4iLNvwkfQmmZ3Gd33jQhscLbB72OzGbeDdLSwBoMdNzCpc587c5eRYFco/yidCNKgwBMoekwfu0i6INj9qeWOr/Ga6Z8AQ4VTHY1wXkJeWL7eYiJhPBupbaRqzzPOMhq9l2PMXJ+N6BCVhHglUQ6LnRGzua0LAjrIYe7Tr6e9Jd7A/x7KZx9dbli1qrjbPktzHZYoeIS+CQ9wxbElPrleteu70HMR6LvvJ+MnvopgYASN9S8mFqHKzTdybcnjv7nwXqMbHSM5KhT5DE2UAtX1JB4FxC/PpVJeS06e9evHAwdCzzKuFy/aLwQlMt9YNLq0m8bA4zTXpTwy2SUYEJWcpUXfAxa20S9zZc+R5ZSOTtSNVFCPQ5IeOnytdSRBkYtm5FBnOxMmniCKRhAZZ25nA96SD7iDpCS69oOP55y0cAezC3RzRs/Sh6De6EU76LzExcQdvoldgmj8E2P9q7FySL25OeHJKdtSsUtGCOM8O3f0EPvMr+fsdhHtpiEAyLRUaEvErn96E7TMutV9ty0ix6Ifgo5n6KMjSVSV0yPj7Z61BZBXKIrQgYhJOk6HPAYgfBlgXwOpsEbFZ1mI=
+      - name: infranodes.enabled
+        value: "true"
+    repoURL: https://gepaplexx.github.io/gp-helm-charts/
+    targetRevision: 1.2.7
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+...
+---
+# Source: gp-cluster-setup/templates/02-argo-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-updater
+  finalizers:
+  - "resources-finalizer.argocd.argoproj.io"
+spec:
+  destination:
+    namespace: gp-infrastructure
+    server: 'https://kubernetes.default.svc'
+  project: gepaplexx
+  source:
+    chart: gp-cluster-update-checker
+    helm:
+      parameters:
+      - name: clustername
+        value: steppe
+      - name: consoleUrl
+        value: console.apps.steppe.gepaplexx.com
+      - name: slack.channel
+        value: AgBIPG9Zo8SxwkZbayJT7kKCFT8EETzn6qmwPLmV3H9KOgxUWsPdhKQZC0Qnkc6dGJk7jv/rDhnzzYJ62hSvIvgKh5FQQkOyIbAvWhIUeO7xSWQK38UhULmlIdnhMoo1NVbmdWCM/VyF8N4HizqeD2c6UnTmJuwbWR7vGFzxD622G+arsZ4Kx5mBGnfcNsDcSu2yiq3R47m3iB+KNgr3M9aJFAsQaWHiiufgFTTqJicNAfo3FjzrPPvOd57B/SZuL0QXOlxUMVzHA/RGn5/2J+LWjnbOXH4d3d6zwmgv0mLAor86hn301y3ZLVXqUaphaMsPuVv8/KEEpTYu1uyw10cCMSr8wlCa53O7RdgA3IGdjHi0y9qZxs+HFzuRVhWOPmcADN3iUiJV7FZtW0C2N7HfdO3V1365D2BXuT23b4OzGplm2oj02XKeNAN9cj2/oWTVx4tSyojr9L/5tnwHlN+Sg21ACiqhRoAmQRe4K6YO+YSDne6+hE3aDPGAdNQQHUSHe8JHhaxzS9DiHj/R/5waLaSrm9TWlT2t1gDqehAN1aPra/QI+ETJtVAA+eapv5PUq7sWRyjTdEBMEOLbClIwRcHQKj/fslNhYEv0ZLAN0JeyBJwmsXtth89m5wVDPz+0WIeH2JbkBr3xLcYXR4OY7No+YA/jdtCDntyXH4GmnLIW55z7fE0MmbxtniT2ryHiiM4vrRhPC90nNJykMaxrBP9+Kc4HP10Gbnf7yGlXfuDzP1sWPpDtImPTe8GMpdGqXntLlnS0FXOGeMVNIoFfqxT5GGlNmZN5xuaWwqNhrIo=
+    repoURL: https://gepaplexx.github.io/gp-helm-charts/
+    targetRevision: 1.2.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+...
+---
+# Source: gp-cluster-setup/templates/02-argo-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gepaplexx-cicd
+  finalizers:
+  - "resources-finalizer.argocd.argoproj.io"
+spec:
+  destination:
+    namespace: openshift-gitops
+    server: 'https://kubernetes.default.svc'
+  project: gepaplexx
+  source:
+    path: clusters/steppe/applications
+    repoURL: git@github.com:gepaplexx/gepaplexx-cicd.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+...
+---
+# Source: gp-cluster-setup/templates/02-argo-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gepaplexx-cicd-eventbus
+  finalizers:
+  - "resources-finalizer.argocd.argoproj.io"
+spec:
+  destination:
+    namespace: gepaplexx-cicd-eventbus
+    server: 'https://kubernetes.default.svc'
+  project: gepaplexx
+  source:
+    chart: gepaplexx-cicd-eventbus
+    repoURL: https://gepaplexx.github.io/gp-helm-charts/
+    targetRevision: 0.1.3
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+...
+---
+# Source: gp-cluster-setup/templates/02-argo-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gepaplexx-cicd-tools
+  finalizers:
+  - "resources-finalizer.argocd.argoproj.io"
+spec:
+  destination:
+    namespace: gepaplexx-cicd-tools
+    server: 'https://kubernetes.default.svc'
+  project: gepaplexx
+  source:
+    chart: gp-cicd-tools
+    helm:
+      parameters:
+      - name: argocd.route.hostname
+        value: argocd.apps.steppe.gepaplexx.com
+      - name: argo_workflows.server.ingress.hosts[0]
+        value: workflows.apps.steppe.gepaplexx.com
+      - name: argo_workflows.server.ingress.tls[0].hosts[0]
+        value: workflows.apps.steppe.gepaplexx.com
+      - name: argo_workflows.server.ingress.tls[0].secretName
+        value: workflows.apps.steppe.gepaplexx.com-tls
+      - name: argo_rollouts.dashboard.ingress.hosts[0]
+        value: rollouts.apps.steppe.gepaplexx.com
+      - name: argo_rollouts.dashboard.ingress.tls[0].hosts[0]
+        value: rollouts.apps.steppe.gepaplexx.com
+      - name: argo_rollouts.dashboard.ingress.tls[0].secretName
+        value: rollouts.apps.steppe.gepaplexx.com
+      - name: sealedSecret.postgresql.password
+        value: AgCDAZDLeivIhT3xE+2H+3SRn5hb+TwbAK86aE+Xyg4WTtBppLWONNCdlnQT/KJ7iDKT8vKC4SjOOLnwSwySfQCoQqZDQ/fo7sTkTDKr03EzFGDpbccD77mxYpQW+Go14VPoToascX36Cz4zc1smgCHHaoNAIX+Z0s4Ads6cjhF2SMBQ8E92e5Kj2wATPs/Y7uPgGiR08eonD/pLcXckj9nhHCFcKdbSBlEQRNmtQD1rWy7NqPnXBW+NGIRKBMWyyzwitdLB1BmpyZXUSDOq+AyjfSqiVNC1OEa0nxXDoWJzt7uQAybGD8LgCSrMyQRiUiDLy1wlqkmlbnmTWAwW7G68t5yR5x6s8QFpKSpSTrd2h2RsSZV4W4w9WAHVMSCFwxARAD/1FPuT3neNH630go/dZRBFKJi5ddK/jS0DvQGTSQqMBDAud/1jXI7zaJHGqOamVxhlfDwkzYP+ilLDbwPGRy0UO+MORFPnhw+aelRsyCdYm30fB/HUF7yY2+lKrtL5VTR87uEgwMGhM5fwpb7RMER3Bhr/DPaoPHzUehFMcB39PCibpog0eghMbuBtCvpapAOFL84M8mv+bQMVv64+5/w0PK5c3uA0/j/EljhSmmLA9SqhC00Cg9XJFzJQet1FZ1lWaIVrdOutt0ZTicsqFU0qHq+AO4j5PlgeL6KS3psimcT+ZQMhS5PD9pEs4I6bxgx88kT66QZT
+      - name: sealedSecret.postgresql.postgresPassword
+        value: AgA3HSgmbUIM+UX3pSAvsr4Wo9pU0zx2ja9itSYNuOFS44N3W3S96JOdkcYavk29hkRwhBcWV9kIzo1h2D1ihqpHeKwa2zhm9s9gILv+OP9PSwctrsbaBxgCDIU9Wv609Jd4G28rpSiZ6MDOD3sXnDqsie9aYWqEeYCFr17mQZkWGuSFnPbv/0n5hUT3/03e0K8CMo4kNcsryFdiaqU3uwvEwJ4baGkFKtFim+7/2lepo6dkJMr2thWtRZoait02GBLe+BaBpNhfOQ2BQkOoAulDkU1wl2OWcfzi7Ldu8N6TtXell771rGv0Je53KeFIN0emUPKMVs8so9LiJ+srZTlf9lGWK0YHpjzKfbxpT7I7XMcuP9mQ+4W3nSe8D79u61PcheRBWQ1MELDw7gHLL9KoHh7vSGDuTziyUmgFnQXxyicl6Dd2dZPfSDPxlSA6vBb6dfNwFThP8e6JriweC/IT1Act4EMscAQ6DOh/jXdkyRZH/zZfTqaFB4zSBzDo+vulIsbuK2m1PnfJPoofL2ZY4mnexy1U280STQZQ/UToMr/sm3NWOf3NPgoYjibOPSWX4KezHCgGSHvEOZ0vfRn+8nkEzs6wNKKEOi7RxjpgCOSmtGmytX1GOnIhB4Uwn5yZQNIB+1aiSjdeXVomkGsDu3600l7oaGytOXmtavoNCnIF/ztmdQymstAJVDZY9/KJle1o92VQ1WTE
+      - name: sealedSecret.postgresql.username
+        value: AgADG6AfLve+xdSl1yMW2a/Q5oMkowFPOpSTWq0XozeDh4yVdaz842R4QamOLkoxtq+w4273x7j9hLLDoGo/QtTbmWGh0W9A6vYsVak8jsSiRmjNMrO2y8T4rNEBMQkIG7OdfLpkwqIw6fcWhXLIIMEWsOL7Ek99uvbwhETC6nmGoWB0YEFNOakU28ihLNzhzT4OdmYEG7MGIiBDezYFWHToj0Bj2agTj3es2w4sbC+WXBzlrgdgDaj/aEAg+Qc1i4yXgoNtOdLXyga1TCjqhwLpCKmqNz9bF0GP1PbOxB2gYOHH/tecRCVu6PuVeGU/od+Bra2dCwC4/fPfq7EstoWqzGMusIEdeYOq9z27Hz2fRCGCWfDFetWKou7KkkPr9Vy2CC1JKZSl4E3Xqk7SbwUyPLVJ85vu0uEWrvGK0b8v6BxJLSJPS5jjNg9rt+lzIQblDNTZmqrhZ0e5LgHHnTNuHaNkxTzIthODUd+cjrzhfydkLo7JKpNEGb1Oew5RKZU8cWXj1XRFcB8GH3dNyc/z/GGdirqoyqquU8FGMDQVttiQ9berV7I3Qh+24JWTAKAS+q27Ft75aHKjOGrbEP6r68FLSW2P+YjfyCbzeaKVOU17UWDCrHQTy3jMXso0/rZi1Bfb+wUwJkgfn1q6FEjfxPABTlWrjttNyjtMixLP4N97riRY8++3RZ/9N42FgscgigdrDCigGcaLLVD0
+    repoURL: https://gepaplexx.github.io/gp-helm-charts/
+    targetRevision: 0.4.2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+...
+---
+# Source: gp-cluster-setup/templates/02-argo-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-instance
+  finalizers:
+  - "resources-finalizer.argocd.argoproj.io"
+spec:
+  destination:
+    namespace: grafana-operator-system
+    server: 'https://kubernetes.default.svc'
+  project: gepaplexx
+  source:
+    chart: gp-grafana-instance
+    helm:
+      parameters:
+      - name: datasource.prometheus.url
+        value: https://thanos-querier-openshift-monitoring.apps.steppe.gepaplexx.com:443
+    repoURL: https://gepaplexx.github.io/gp-helm-charts/
+    targetRevision: 0.0.6
+  ignoreDifferences:
+    - group: integreatly.org
+      jsonPointers:
+      - /spec/datasources/0/secureJsonData/httpHeaderValue1
+      kind: GrafanaDataSource
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+...
+---
+# Source: gp-cluster-setup/templates/02-argo-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openshift-registry
+  finalizers:
+  - "resources-finalizer.argocd.argoproj.io"
+spec:
+  destination:
+    namespace: gp-infrastructure
+    server: 'https://kubernetes.default.svc'
+  project: gepaplexx
+  source:
+    chart: gp-ocp-internal-registry
+    repoURL: https://gepaplexx.github.io/gp-helm-charts/
+    targetRevision: 1.1.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+...
+---
+# Source: gp-cluster-setup/templates/02-argo-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k10
+  finalizers:
+  - "resources-finalizer.argocd.argoproj.io"
+spec:
+  destination:
+    namespace: k10
+    server: 'https://kubernetes.default.svc'
+  project: gepaplexx
+  source:
+    chart: gp-kasten-instance
+    helm:
+      parameters:
+      - name: kasten.auth.clusterApiURL
+        value: api.steppe.gepaplexx.com
+      - name: kasten.route.host
+        value: kasten.apps.steppe.gepaplexx.com
+      - name: kasten.clusterName
+        value: steppe
+    repoURL: https://gepaplexx.github.io/gp-helm-charts/
+    targetRevision: 0.0.5
+  ignoreDifferences:
+    - group: apik10.kasten.io
+      jsonPointers:
+      - /spec/auth/openshift/clientSecret
+      kind: K10
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+...
+

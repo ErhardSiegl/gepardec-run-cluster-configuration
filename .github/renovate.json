@@ -5,4 +5,8 @@
   ],
   "prHourlyLimit": 0,
   "includeForks": true
+  "argocd": {
+    "fileMatch": ["argocd-.+\\.yaml$"]
+  }
+
 }
