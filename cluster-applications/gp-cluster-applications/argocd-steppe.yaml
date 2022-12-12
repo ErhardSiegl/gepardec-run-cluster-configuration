@@ -1,3 +1,11 @@
+NAME: test
+LAST DEPLOYED: Mon Dec 12 15:44:44 2022
+NAMESPACE: default
+STATUS: pending-install
+REVISION: 1
+TEST SUITE: None
+HOOKS:
+MANIFEST:
 ---
 # Source: gp-cluster-setup/templates/02-argo-application.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -197,7 +205,7 @@ spec:
       - name: sealedSecret.postgresql.username
         value: AgADG6AfLve+xdSl1yMW2a/Q5oMkowFPOpSTWq0XozeDh4yVdaz842R4QamOLkoxtq+w4273x7j9hLLDoGo/QtTbmWGh0W9A6vYsVak8jsSiRmjNMrO2y8T4rNEBMQkIG7OdfLpkwqIw6fcWhXLIIMEWsOL7Ek99uvbwhETC6nmGoWB0YEFNOakU28ihLNzhzT4OdmYEG7MGIiBDezYFWHToj0Bj2agTj3es2w4sbC+WXBzlrgdgDaj/aEAg+Qc1i4yXgoNtOdLXyga1TCjqhwLpCKmqNz9bF0GP1PbOxB2gYOHH/tecRCVu6PuVeGU/od+Bra2dCwC4/fPfq7EstoWqzGMusIEdeYOq9z27Hz2fRCGCWfDFetWKou7KkkPr9Vy2CC1JKZSl4E3Xqk7SbwUyPLVJ85vu0uEWrvGK0b8v6BxJLSJPS5jjNg9rt+lzIQblDNTZmqrhZ0e5LgHHnTNuHaNkxTzIthODUd+cjrzhfydkLo7JKpNEGb1Oew5RKZU8cWXj1XRFcB8GH3dNyc/z/GGdirqoyqquU8FGMDQVttiQ9berV7I3Qh+24JWTAKAS+q27Ft75aHKjOGrbEP6r68FLSW2P+YjfyCbzeaKVOU17UWDCrHQTy3jMXso0/rZi1Bfb+wUwJkgfn1q6FEjfxPABTlWrjttNyjtMixLP4N97riRY8++3RZ/9N42FgscgigdrDCigGcaLLVD0
     repoURL: https://gepaplexx.github.io/gp-helm-charts/
-    targetRevision: 0.4.2
+    targetRevision: 0.3.*
   syncPolicy:
     automated:
       prune: true
@@ -254,7 +262,7 @@ spec:
   source:
     chart: gp-ocp-internal-registry
     repoURL: https://gepaplexx.github.io/gp-helm-charts/
-    targetRevision: 1.1.1
+    targetRevision: 1.1.*
   syncPolicy:
     automated:
       prune: true
