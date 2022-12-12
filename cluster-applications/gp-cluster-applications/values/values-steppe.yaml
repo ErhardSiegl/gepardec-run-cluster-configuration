@@ -102,7 +102,7 @@ applications:
     source:
       repoURL: "https://gepaplexx.github.io/gp-helm-charts/"
       chart: gp-ocp-internal-registry
-      targetRevision: "1.1.1"
+      targetRevision: "1.1.*"
     syncPolicy:
       automated:
         prune: true
@@ -149,7 +149,7 @@ applications:
     source:
       repoURL: "https://gepaplexx.github.io/gp-helm-charts/"
       chart: gp-cicd-tools
-      targetRevision: "0.4.2"
+      targetRevision: "0.3.*"
       helm:
         parameters:
           - name: "argocd.route.hostname"
