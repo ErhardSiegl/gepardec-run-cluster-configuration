@@ -74,7 +74,7 @@ spec:
       - name: infranodes.enabled
         value: "true"
     repoURL: https://gepaplexx.github.io/gp-helm-charts/
-    targetRevision: 1.2.7
+    targetRevision: 1.5.3
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
